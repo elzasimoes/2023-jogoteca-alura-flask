@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, session, flash
 from livereload import Server
 
 
@@ -15,7 +15,7 @@ jogo_3 = Jogo('Mortal Kombat', 'luta', 'Xbox')
 lista = [jogo_1, jogo_2, jogo_3]
 
 app = Flask(__name__)
-
+app.secret_key = 'alura'
 
 @app.route('/')
 def index():
@@ -35,6 +35,27 @@ def criar():
     jogo = Jogo(nome, categoria, console)
     lista.append(jogo)
     return redirect('/')
+
+@app.route('/login')
+def login():
+    return render_template('login.html')
+
+
+@app.route('/autenticar', methods=['POST', ])
+def autenticar():
+    if 'senha' == request.form['senha']:
+        session['usuario_logado'] = request.form['usuario']
+        flash(request.form['usuario'] + ' logou com sucesso!')
+        return redirect('/')
+    else:
+        flash('Usuário não logado.')
+        return redirect('/login')
+
+@app.route('/logout')
+def logout():
+    session['usuario_logado'] = None
+    flash('Logout realizado com sucesso!')
+    return redirect ('/')
 
 if __name__ == '__main__':
     app.run(debug=True)
