@@ -15,8 +15,11 @@
                     <td>{{ jogo.categoria }}</td>
                     <td>{{ jogo.console }}</td>
                 </tr>
-
                 {% endfor %}
             </tbody>
         </table>
+        <form method="post">
+        <button type="submit" class="btn btn-primary btn-novo" value="novo-jogo" name="novo-jogo">Novo Jogo</button>
+        <button type="submit" class="btn btn-success float-right" value="logout" name="logout">Logout</button>
+        </form>
 {% endblock %}
