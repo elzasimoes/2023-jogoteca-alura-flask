@@ -12,6 +12,7 @@ usuarios = {
     usuario_2.nickname : usuario_2,
     usuario_3.nickname : usuario_3
 }
+
 jogo_1 = Jogo('Tetris', 'Puzzle', 'Atari')
 jogo_2 = Jogo('God of War', 'War', 'Foda-se')
 jogo_3 = Jogo('Mortal Kombat', 'luta', 'Xbox')
