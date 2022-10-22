@@ -1,7 +1,12 @@
+import sqlite3
 from flask import Flask, render_template, request, redirect, session, flash, url_for
 from livereload import Server
 from classes import Usuario, Jogo
 
+def get_db_connection():
+    conn = sqlite3.connect('database.db')
+    conn.row_factory = sqlite3.Row
+    return conn
 
 usuario_1 = Usuario('User1', 'user1', 'user1')
 usuario_2 = Usuario('User2', 'user2', 'user2')
@@ -13,11 +18,10 @@ usuarios = {
     usuario_3.nickname : usuario_3
 }
 
-jogo_1 = Jogo('Tetris', 'Puzzle', 'Atari')
-jogo_2 = Jogo('God of War', 'War', 'Foda-se')
-jogo_3 = Jogo('Mortal Kombat', 'luta', 'Xbox')
-
-lista = [jogo_1, jogo_2, jogo_3]
+conn = get_db_connection()
+jogos = conn.execute('SELECT * FROM jogos').fetchall()
+#usuarios = conn.execute('SELECT * FROM usuarios').fetchall()
+conn.close()
 
 app = Flask(__name__)
 app.secret_key = 'alura'
@@ -32,7 +36,7 @@ def index():
             return redirect('/logout')
 
     return render_template \
-        ('lista.html', titulo = 'Jogos', jogos = lista)
+        ('lista.html', titulo = 'Jogos', jogos = jogos)
 
 @app.route('/novo')
 def novo():
@@ -42,13 +46,18 @@ def novo():
     return render_template \
         ('novo.html', titulo = 'Novo Jogo')
 
-@app.route('/criar', methods=['POST'])
+@app.route('/criar', methods=['POST', 'GET'])
 def criar():
     nome = request.form['nome']
     categoria = request.form['categoria']
     console = request.form['console']
     jogo = Jogo(nome, categoria, console)
-    lista.append(jogo)
+    jogos.append(jogo)
+    conn = get_db_connection()
+    conn.execute('INSERT INTO jogos (nome, categoria, console) VALUES (?, ?, ?)',
+                         (nome, categoria, console))
+    conn.commit()
+    conn.close()
     return redirect(url_for('index'))
 
 @app.route('/login')

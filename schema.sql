@@ -1,0 +1,18 @@
+DROP TABLE IF EXISTS jogos;
+
+CREATE TABLE jogos (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome TEXT NOT NULL,
+    categoria TEXT NOT NULL,
+    console TEXT NOT NULL
+);
+
+
+DROP TABLE IF EXISTS usuarios;
+
+CREATE TABLE usuarios (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome TEXT NOT NULL,
+    nickname TEXT NOT NULL,
+    senha TEXT NOT NULL
+);
